@@ -1,6 +1,6 @@
 # Application-of-classification-models
 
-In this project, we will analyze the data set from [Adult Data Set MLR](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/) which contains income data for people. We will look at the data and build two machine learning models ([Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) & [Random Forest classification](https://en.wikipedia.org/wiki/Random_forest)), and try to predict if a person will make more than $50K a year, given data like education, gender and martial status. We will look at techniques for feature selection and compare the two models using different matrices.
+In this project, we will analyze the data set from [Adult Data Set MLR](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/) which contains income data for people. We will look at the data and build two machine learning models ([Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) & [Random Forest classification](https://en.wikipedia.org/wiki/Random_forest)) using python and its ML libraries, and try to predict if a person will make more than $50K a year given data like education, gender and martial status. We will look at techniques for feature selection and compare the two models using different matrices.
 
 ---
 
@@ -98,6 +98,9 @@ We see there is a high correlation between Education and Education-Num. They act
 original_train.drop(['education'], axis=1, inplace=True)
 encoded_train.drop(['education'], axis=1, inplace=True)
 original_test.drop(['education'], axis=1, inplace=True)
+
+#Encode data in test dataframe 
+encoded_test, _ = number_encode_features(original_test)
 ```
 
 Other than that, the data is mostly OK with the exception of Sex and Relationship, which seems to be negatively correlated.
@@ -123,7 +126,7 @@ y_train = encoded_train['income']
 X_test = encoded_test.drop(columns=['income'], axis=1)
 y_test = encoded_test['income']
 
-# scale the columns between 0 and 1
+# scale the features
 X_scaler = StandardScaler()
 X_train = pd.DataFrame(X_scaler.fit_transform(X_train), columns=X_train.columns)
 X_test = X_scaler.transform(X_test)
@@ -194,7 +197,7 @@ y_train = modified_train['income']
 X_test = modified_test.drop(columns=['income'], axis=1)
 y_test = modified_test['income']
 
-# scale between 0 and 1
+# scale the features
 X_scaler = StandardScaler()
 X_train = pd.DataFrame(X_scaler.fit_transform(X_train), columns=X_train.columns)
 X_test = pd.DataFrame(X_scaler.fit_transform(X_test), columns=X_test.columns)
