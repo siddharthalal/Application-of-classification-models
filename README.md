@@ -276,43 +276,39 @@ plt.ylabel("Real value")
 plt.xlabel("Predicted value")
 ```
 
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+                     max_depth=None, max_features='auto', max_leaf_nodes=None,
+                     min_impurity_decrease=0.0, min_impurity_split=None,
+                     min_samples_leaf=1, min_samples_split=2,
+                     min_weight_fraction_leaf=0.0, n_estimators=10, n_jobs=-1,
+                     oob_score=False, random_state=7248, verbose=0,
+                     warm_start=False)
+
 Test Accuracy: 85.31%
 
 F1 Score: 0.65
 
 ![confusion matrix - rf](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusin%20matrix%20-%20RF.png?raw=true)
 
-Perform GridSerach to tune the hyper parameters, then use the best estimator for scoring on the test set.
+Running a different number of trees and see the effect of that on the accuracy of the prediction
 
 ```python
-param_test1 = {
- 'max_depth': range(3, 10, 2),
- 'n_estimators': range(100, 500, 1000),
- 'min_samples_split': [2, 5, 10],
- 'min_samples_leaf': [1, 3, 5],
- 'max_features': [3, 5, 7],
-}
+trees=range(25)
+accuracy=np.zeros(25)
 
-grid_search = GridSearchCV(rfmodel, param_grid=param_test1, scoring="roc_auc", n_jobs=-1, verbose=1)
-grid_result = grid_search.fit(X_train, y_train)
-print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+for idx in range(len(trees)):
+    model=RandomForestClassifier(n_estimators=idx + 1, random_state=seed)
+    model.fit(X_train, y_train)
+    predictions=model.predict(X_test)
+    accuracy[idx]=metrics.accuracy_score(y_test, predictions)
 
-predicted = grid_result.predict(X_test)
+plt.cla()
+plt.plot(trees, accuracy)
 ```
 
-![Grid Search](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/grid%20search.png?raw=true)
+![Change in Accuracy by changing the number of tress in the forest](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/accuracy%20plot.png?raw=true)
 
-```python
-# evaluation metrics
-print("Test Accuracy:", format(metrics.accuracy_score(y_test, predicted) * 100, '.2f'), '%')
-print("F1 Score:", format(metrics.f1_score(y_test, predicted), '.2f'))
-```
-
-Test Accuracy: 85.97%
-
-F1 Score: 0.65
-
-There is a slight increase in accuracy. The F1 score remains the same.
+The accuracy of the random forest doesn't change much with the subsequent growing of multiple trees, adding little to the overall accuracy of the model.
 
 ### Feature importance
 
@@ -327,31 +323,7 @@ for feature in zip(feat_labels, grid_result.best_estimator_.feature_importances_
 
 ```
 
-('workclass', 0.06593737290266051)
-
-('marital-status', 0.007825417988499566)
-
-('occupation', 0.01252132264987309)
-
-('relationship', 0.18225968782751814)
-
-('race', 0.07964556330464548)
-
-('sex', 0.026116610340960106)
-
-('native-country', 0.2804751213304822)
-
-('age', 0.002050581852915335)
-
-('capital-gain', 0.007544963332464822)
-
-('capital-loss', 0.22825591508041407)
-
-('education-num', 0.05580299770923593)
-
-('fnlwgt', 0.04796585644898718)
-
-('hours-per-week', 0.003598589231343467)
+![Feature Importance](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/feature%20importance.png?raw=true)
 
 Lets select a threshold of 0.05 to select important features:
 
@@ -369,17 +341,7 @@ for feature_list_index in sfm.get_support(indices=True):
 
 Important features:
 
-workclass
-
-relationship
-
-race
-
-native-country
-
-capital-loss
-
-education-num
+### workclass, occupation, relationship, race, sex, native-country, capital-loss, fnlwgt
 
 We can try training the model only on the important features and see how it impacts the accuracy score.
 
@@ -397,11 +359,11 @@ print("F1 Score:", format(metrics.f1_score(y_test, predicted), '.2f'))
 
 ```
 
-Test Accuracy: 85.84%
+Test Accuracy: 83.64%
 
-F1 Score: 0.64
+F1 Score: 0.62
 
-Looks great, the accuracy has decreased only a little while the F1 score remains the same and we were able to simplify the model by reducing the number of features.
+Looks good, there's only a slight decrease in accuracy and F1 score and we were able to simplify the model by reducing the number of features.
 
 ### Conclusion
 
