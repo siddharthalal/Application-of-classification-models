@@ -1,6 +1,10 @@
 # Application-of-classification-models
 
-In this project, we will analyze the data set from [Adult Data Set MLR](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/) which contains income data for people. We will look at the data and build two machine learning models ([Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) & [Random Forest classification](https://en.wikipedia.org/wiki/Random_forest)) using python and its ML libraries, and try to predict if a person will make more than $50K a year given data like education, gender and martial status. We will look at techniques for feature selection and compare the two models using different matrices.
+In this project, we will analyze the data set from [Adult Data Set MLR](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/) which contains income data for people. 
+
+We will build two machine learning models ([Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) & [Random Forest classification](https://en.wikipedia.org/wiki/Random_forest)) using python and its ML libraries, and try to predict if a person will make more than $50K a year given data like education, gender and martial status. 
+
+We will look at feature importance and compare the two models using standard matrices.
 
 ---
 
@@ -156,6 +160,7 @@ coefs.plot(kind="bar")
 plt.show()
 ```
 Test Accuracy: 82.45 %
+
 F1 Score: 0.55
 
 ![confusion matrix](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusion%20matrix%20-%201.png?raw=true)
@@ -178,7 +183,6 @@ train_category_dummy = pd.get_dummies(train_category, columns=['workclass', 'edu
 modified_train = pd.concat([train_category_dummy, train_numeric], axis=1)
 
 # do the same for test data set
-
 test_category = original_test[['workclass', 'education-num', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country', 'income']]
 
 test_numeric = original_test[np.setdiff1d(encoded_test.columns.tolist(), test_category.columns.tolist())]
@@ -225,6 +229,7 @@ plt.show()
 
 ```
 Test Accuracy: 85.28 %
+
 F1 Score: 0.66
 
 ![confusion matrix - 2](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusion%20matrix%20-%202.png?raw=true)
