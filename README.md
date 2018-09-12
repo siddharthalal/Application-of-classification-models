@@ -300,7 +300,7 @@ print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
 predicted = grid_result.predict(X_test)
 ```
 
-![Grid Search](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/grid%20search.png.png?raw=true)
+![Grid Search](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/grid%20search.png?raw=true)
 
 ```python
 # evaluation metrics
@@ -328,17 +328,29 @@ for feature in zip(feat_labels, grid_result.best_estimator_.feature_importances_
 ```
 
 ('workclass', 0.06593737290266051)
+
 ('marital-status', 0.007825417988499566)
+
 ('occupation', 0.01252132264987309)
+
 ('relationship', 0.18225968782751814)
+
 ('race', 0.07964556330464548)
+
 ('sex', 0.026116610340960106)
+
 ('native-country', 0.2804751213304822)
+
 ('age', 0.002050581852915335)
+
 ('capital-gain', 0.007544963332464822)
+
 ('capital-loss', 0.22825591508041407)
+
 ('education-num', 0.05580299770923593)
+
 ('fnlwgt', 0.04796585644898718)
+
 ('hours-per-week', 0.003598589231343467)
 
 Lets select a threshold of 0.05 to select important features:
@@ -358,13 +370,18 @@ for feature_list_index in sfm.get_support(indices=True):
 Important features:
 
 workclass
+
 relationship
+
 race
+
 native-country
+
 capital-loss
+
 education-num
 
-We can try training the model only on the important features and see how it impacts the accuracy score:
+We can try training the model only on the important features and see how it impacts the accuracy score.
 
 ```python
 X_important_train = sfm.transform(X_train)
