@@ -2,9 +2,9 @@
 
 In this project, we will analyze the data set from [Adult Data Set MLR](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/) which contains income data for people. 
 
-We will build two machine learning models ([Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) & [Random Forest classification](https://en.wikipedia.org/wiki/Random_forest)) using python and its ML libraries, and try to predict if a person will make more than $50K a year given data like education, gender and martial status. 
+We will build two models ([Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression) & [Random Forest classification](https://en.wikipedia.org/wiki/Random_forest)) using python and its ML libraries, and try to predict if a person will make more than $50K a year given data like education, gender and martial status. 
 
-We will look at feature importance and compare the two models using standard matrices.
+We will also look at feature importance and compare the two models using standard matrices.
 
 ---
 
