@@ -235,3 +235,138 @@ F1 Score: 0.66
 ![confusion matrix - 2](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusion%20matrix%20-%202.png?raw=true)
 
 We managed to improve the accuracy and F1 scores by converting the data to use dummy variables. Also it seems that we managed to uncover some interesting insight from our model. It seems that the features that impacts the income of a person positively are Capital Gain, Married-civ-spounce, Age, Hours per week and Exec-managerial. The features that impact it most negatively are Never married, Own child, Priv-house-serv, Divorsed and Female.
+
+### Random Forest Classifier
+
+Random forests provide importance scores for each feature variable and also allows us to evaluate any increases in correct classification with the growing of smaller and larger number of trees.
+
+```python
+# train set
+X_train = encoded_train.drop(columns=['income'], axis=1)
+y_train = encoded_train['income']
+
+# test set
+X_test = encoded_test.drop(columns=['income'], axis=1)
+y_test = encoded_test['income']
+
+# scale the numeric columns between 0 and 1 (normalization)
+X_scaler = StandardScaler()
+X_train = pd.DataFrame(X_scaler.fit_transform(X_train), columns=X_train.columns)
+X_test = X_scaler.transform(X_test)
+
+rfmodel = RandomForestClassifier(n_jobs=-1, random_state=seed)
+rfmodel.fit(X_train, y_train)
+predicted = rfmodel.predict(X_test)
+
+# evaluation metrics
+print("Test Accuracy:", format(metrics.accuracy_score(y_test, predicted) * 100, '.2f'), '%')
+print("F1 Score:", format(metrics.f1_score(y_test, predicted), '.2f'))
+
+cm = metrics.confusion_matrix(y_test, predicted)
+plt.figure(figsize=(12,12))
+plt.subplot(2,1,1)
+sns.heatmap(cm, annot=True, fmt="d", xticklabels=['<=50K', '<50K'], yticklabels=['<=50K', '<50K'])
+plt.ylabel("Real value")
+plt.xlabel("Predicted value")
+```
+Test Accuracy: 85.31%
+F1 Score: 0.65
+
+
+Perform GridSerach to tune the hyper parameters, then use the best estimator for scoring on the test set.
+
+```python
+param_test1 = {
+ 'max_depth': range(3, 10, 2),
+ 'n_estimators': range(100, 500, 1000),
+ 'min_samples_split': [2, 5, 10],
+ 'min_samples_leaf': [1, 3, 5],
+ 'max_features': [3, 5, 7],
+}
+
+grid_search = GridSearchCV(rfmodel, param_grid=param_test1, scoring="roc_auc", n_jobs=-1, verbose=1)
+grid_result = grid_search.fit(X_train, y_train)
+print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+
+predicted = grid_result.predict(X_test)
+```
+
+```python
+# evaluation metrics
+print("Test Accuracy:", format(metrics.accuracy_score(y_test, predicted) * 100, '.2f'), '%')
+print("F1 Score:", format(metrics.f1_score(y_test, predicted), '.2f'))
+```
+Test Accuracy: 85.97%
+F1 Score: 0.65
+
+There is a slight increase in accuracy. The F1 score remains the same.
+
+### Feature importance
+
+```python
+
+feat_labels = ['workclass', 'marital-status', 'occupation', 'relationship', 'race',
+               'sex', 'native-country', 'age', 'capital-gain', 'capital-loss',
+               'education-num', 'fnlwgt', 'hours-per-week']
+
+for feature in zip(feat_labels, grid_result.best_estimator_.feature_importances_):
+    print(feature)
+
+```
+
+```python
+feat_labels = ['workclass', 'marital-status', 'occupation', 'relationship', 'race',
+               'sex', 'native-country', 'age', 'capital-gain', 'capital-loss',
+               'education-num', 'fnlwgt', 'hours-per-week']
+
+for feature in zip(feat_labels, grid_result.best_estimator_.feature_importances_):
+    print(feature)
+```
+
+Lets select a threshold of 0.05 to select important features
+
+```python
+from sklearn.feature_selection import SelectFromModel
+
+sfm = SelectFromModel(grid_result.best_estimator_, threshold=0.05)
+sfm.fit(X_train, y_train)
+
+print ("Important features:\n")
+
+for feature_list_index in sfm.get_support(indices=True):
+    print(feat_labels[feature_list_index])
+```
+
+Important features:
+
+workclass
+relationship
+race
+native-country
+capital-loss
+education-num
+
+We can try training the model only on the important features and see how it impacts the accuracy score
+
+```python
+X_important_train = sfm.transform(X_train)
+X_important_test = sfm.transform(X_test)
+
+rfmodel_important = grid_result.best_estimator_
+rfmodel_important.fit(X_important_train, y_train)
+predicted = rfmodel_important.predict(X_important_test)
+
+# evaluation metrics
+print("Test Accuracy:", format(metrics.accuracy_score(y_test, predicted) * 100, '.2f'), '%')
+print("F1 Score:", format(metrics.f1_score(y_test, predicted), '.2f'))
+
+```
+
+Test Accuracy: 85.84 %
+F1 Score: 0.64
+
+Looks great, the accuracy has decreased only a little while the F1 score remains the same and we were able to simplify the model by reducing the number of features.
+
+### Conclusion
+
+Looking at the above analysis, both Logistic and Random Forest models have produced nearly same accuracy and F1 scores with some tuning. Logistic produced the best results when categorical columns were dummified. With random forest, we were also able to reduce the number of features.
