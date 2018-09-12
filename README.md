@@ -284,9 +284,9 @@ RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                      oob_score=False, random_state=7248, verbose=0,
                      warm_start=False)
 
-Test Accuracy: 85.31%
+Test Accuracy: 84.75%
 
-F1 Score: 0.65
+F1 Score: 0.63
 
 ![confusion matrix - rf](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusin%20matrix%20-%20RF.png?raw=true)
 
@@ -341,7 +341,7 @@ for feature_list_index in sfm.get_support(indices=True):
 
 Important features:
 
-### workclass, occupation, relationship, race, sex, native-country, capital-loss, fnlwgt
+workclass, occupation, relationship, race, sex, native-country, capital-loss, fnlwgt
 
 We can try training the model only on the important features and see how it impacts the accuracy score.
 
