@@ -46,6 +46,8 @@ original_test.dropna(inplace=True)
 # remove spaces after comma for pandas convenience
 original_train[original_train.select_dtypes(['object']).columns] = original_train.select_dtypes(['object']).apply(lambda x: x.str.strip())
 original_test[original_test.select_dtypes(['object']).columns] = original_test.select_dtypes(['object']).apply(lambda x: x.str.strip())
+
+original_train.head()
 ```
 
 ![dataframe](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/dataframe.png?raw=true)
@@ -122,6 +124,8 @@ The seems to make sense. Now, let’s try to build a classifier which tries to p
 Most machine learning algorithms like the features to be scaled with mean 0 and variance 1. This is called “removing the mean and scaling to unit variance”. This can be easily done with the [StandardScaler](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html) from scikit-learn.
 
 ```python
+seed = np.random.randint(2**16)
+
 # train set
 X_train = encoded_train.drop(columns=['income'], axis=1)
 y_train = encoded_train['income']
@@ -159,7 +163,8 @@ plt.subplot(2,1,2)
 coefs.plot(kind="bar")
 plt.show()
 ```
-Test Accuracy: 82.45 %
+
+Test Accuracy: 82.45%
 
 F1 Score: 0.55
 
@@ -229,7 +234,8 @@ plt.show()
 
 ```
 
-Test Accuracy: 85.28 %
+Test Accuracy: 85.28%
+
 F1 Score: 0.66
 
 ![confusion matrix - 2](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusion%20matrix%20-%202.png?raw=true)
@@ -269,7 +275,9 @@ sns.heatmap(cm, annot=True, fmt="d", xticklabels=['<=50K', '<50K'], yticklabels=
 plt.ylabel("Real value")
 plt.xlabel("Predicted value")
 ```
+
 Test Accuracy: 85.31%
+
 F1 Score: 0.65
 
 ![confusion matrix - rf](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusin%20matrix%20-%20RF.png?raw=true)
@@ -299,7 +307,9 @@ predicted = grid_result.predict(X_test)
 print("Test Accuracy:", format(metrics.accuracy_score(y_test, predicted) * 100, '.2f'), '%')
 print("F1 Score:", format(metrics.f1_score(y_test, predicted), '.2f'))
 ```
+
 Test Accuracy: 85.97%
+
 F1 Score: 0.65
 
 There is a slight increase in accuracy. The F1 score remains the same.
@@ -331,7 +341,7 @@ for feature in zip(feat_labels, grid_result.best_estimator_.feature_importances_
 ('fnlwgt', 0.04796585644898718)
 ('hours-per-week', 0.003598589231343467)
 
-Lets select a threshold of 0.05 to select important features
+Lets select a threshold of 0.05 to select important features:
 
 ```python
 from sklearn.feature_selection import SelectFromModel
@@ -354,7 +364,7 @@ native-country
 capital-loss
 education-num
 
-We can try training the model only on the important features and see how it impacts the accuracy score
+We can try training the model only on the important features and see how it impacts the accuracy score:
 
 ```python
 X_important_train = sfm.transform(X_train)
@@ -370,7 +380,8 @@ print("F1 Score:", format(metrics.f1_score(y_test, predicted), '.2f'))
 
 ```
 
-Test Accuracy: 85.84 %
+Test Accuracy: 85.84%
+
 F1 Score: 0.64
 
 Looks great, the accuracy has decreased only a little while the F1 score remains the same and we were able to simplify the model by reducing the number of features.
