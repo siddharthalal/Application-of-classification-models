@@ -228,8 +228,8 @@ coefs.plot(kind="bar")
 plt.show()
 
 ```
-Test Accuracy: 85.28 %
 
+Test Accuracy: 85.28 %
 F1 Score: 0.66
 
 ![confusion matrix - 2](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusion%20matrix%20-%202.png?raw=true)
@@ -272,6 +272,7 @@ plt.xlabel("Predicted value")
 Test Accuracy: 85.31%
 F1 Score: 0.65
 
+![confusion matrix - rf](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/confusin%20matrix%20-%20RF.png?raw=true)
 
 Perform GridSerach to tune the hyper parameters, then use the best estimator for scoring on the test set.
 
@@ -290,6 +291,8 @@ print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
 
 predicted = grid_result.predict(X_test)
 ```
+
+![Grid Search](https://github.com/siddharthalal/Project-3---Application-of-classification-models/blob/master/grid%20search.png.png?raw=true)
 
 ```python
 # evaluation metrics
@@ -314,14 +317,19 @@ for feature in zip(feat_labels, grid_result.best_estimator_.feature_importances_
 
 ```
 
-```python
-feat_labels = ['workclass', 'marital-status', 'occupation', 'relationship', 'race',
-               'sex', 'native-country', 'age', 'capital-gain', 'capital-loss',
-               'education-num', 'fnlwgt', 'hours-per-week']
-
-for feature in zip(feat_labels, grid_result.best_estimator_.feature_importances_):
-    print(feature)
-```
+('workclass', 0.06593737290266051)
+('marital-status', 0.007825417988499566)
+('occupation', 0.01252132264987309)
+('relationship', 0.18225968782751814)
+('race', 0.07964556330464548)
+('sex', 0.026116610340960106)
+('native-country', 0.2804751213304822)
+('age', 0.002050581852915335)
+('capital-gain', 0.007544963332464822)
+('capital-loss', 0.22825591508041407)
+('education-num', 0.05580299770923593)
+('fnlwgt', 0.04796585644898718)
+('hours-per-week', 0.003598589231343467)
 
 Lets select a threshold of 0.05 to select important features
 
